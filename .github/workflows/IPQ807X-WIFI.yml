@@ -21,7 +21,8 @@ env:
 jobs:
   Build:
     runs-on: ubuntu-22.04
-
+    timeout-minutes: 90
+    
     steps:
     - name: Check Server Performance(检查服务器性能)
       run: |
@@ -99,9 +100,16 @@ jobs:
         cd $OPENWRT_PATH
         ./scripts/feeds update -a
         ./scripts/feeds install -a
+        
+#====修复rust 1.94 ci‑llvm 404 开启binhost====
+    - name: Fix Rust‑1.94 CI‑LLVM 404 error
+      run: |
+        cd $OPENWRT_PATH
+        sed -i '1i RUST_USE_BINHOST:=1' feeds/packages/lang/rust/Makefile
+#========================================
 
- #   - name: Apply patches(安装补丁)   
- #     run: |
+#    - name: Apply patches(安装补丁)   
+#      run: |
 #  #      git config --global user.name "OpenWrt Builder"
 #        git config --global user.email "buster-openwrt@ovvo.uk"
 # #       cp $PATCHES_FILE_1 $OPENWRT_PATH/feeds/luci
