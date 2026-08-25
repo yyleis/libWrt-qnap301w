@@ -111,10 +111,8 @@ jobs:
     - name: Fix host‑rust disable ci‑llvm download
       run: |
         cd $OPENWRT_PATH
-        #给host编译的x.py注入环境变量，禁用ci‑llvm下载
-        sed -i 's|python3 \$(HOST_BUILD_DIR)/x\.py build|LLVM_DOWNLOAD_CI_LLVM=false python3 \$(HOST_BUILD_DIR)/x.py build|g' feeds/packages/lang/rust/Makefile
-        #校验替换结果
-        grep "x.py build" feeds/packages/lang/rust/Makefile  
+        sed -i 's|python3 \$(HOST_BUILD_DIR)/x\.py|LLVM_DOWNLOAD_CI_LLVM=false python3 \$(HOST_BUILD_DIR)/x.py|g' feeds/packages/lang/rust/Makefile
+        grep "LLVM_DOWNLOAD_CI_LLVM" feeds/packages/lang/rust/Makefile
         
     - name: Load Custom Configuration(加载自定义配置)
       run: |
