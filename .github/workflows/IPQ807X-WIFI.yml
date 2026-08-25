@@ -111,9 +111,9 @@ jobs:
     - name: Fix host‑rust disable ci‑llvm download
       run: |
         cd $OPENWRT_PATH
-        sed -i 's|python3 \$(HOST_BUILD_DIR)/x\.py|LLVM_DOWNLOAD_CI_LLVM=false python3 \$(HOST_BUILD_DIR)/x.py|g' feeds/packages/lang/rust/Makefile
-        grep "LLVM_DOWNLOAD_CI_LLVM" feeds/packages/lang/rust/Makefile
-        
+        sed -i 's/--set=llvm.download-ci-llvm=true/--set=source.crates-io.replace-with=mirror \\\
+        --set=source.mirror.registry=sparse+https:\/\/mirrors.bfsu.edu.cn\/crates.io-index\/ \\\
+        --set=llvm.download-ci-llvm=false/' package/feeds/packages/rust/Makefile
     - name: Load Custom Configuration(加载自定义配置)
       run: |
         [ -e files ] && mv files $OPENWRT_PATH/files
