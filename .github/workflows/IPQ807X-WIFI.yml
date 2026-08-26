@@ -18,11 +18,15 @@ env:
   FIRMWARE_TAG: IPQ807x-WIFI
   TZ: Asia/Shanghai
 
+#CI权限
+permissions: write-all
+
 jobs:
   Build:
     runs-on: ubuntu-22.04
     timeout-minutes: 360
-    
+    permissions:
+      contents: write
     steps:
     - name: Check Server Performance(检查服务器性能)
       run: |
