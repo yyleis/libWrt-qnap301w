@@ -4,7 +4,13 @@ on:
   workflow_dispatch:
   #schedule:
   #  - cron: 0 19 * * *
-
+    inputs:
+      ssh_enable:
+        description: 'Enable tmate SSH session for make menuconfig'
+        required: true
+        default: false
+        type: boolean
+        
 env:
   REPO_URL: https://github.com/LiBwrt/LibWrt.git
   REPO_BRANCH: 25.12-nss
@@ -132,6 +138,25 @@ jobs:
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
+
+    - name: SSH instructions
+      if: github.event.inputs.ssh_enable == 'true'
+      run: |
+        echo "=================================================="
+        echo "SSH session will start. Connect and run:"
+        echo "  cd openwrt"
+        echo "  make menuconfig"
+        echo "  # save and exit"
+        echo "  make download -j8   # (optional) fetch new packages"
+        echo "  exit                # to continue building"
+        echo "=================================================="
+        
+    - name: Start tmate SSH session (if enabled)
+      if: github.event.inputs.ssh_enable == 'true'
+      uses: mxschmitt/action-tmate@v3
+      with:
+        limit-access-to-actor: true   # 只有触发者可以连接（更安全）
+
 
     - name: Compile Firmware(开始编译固件)
       id: compile
