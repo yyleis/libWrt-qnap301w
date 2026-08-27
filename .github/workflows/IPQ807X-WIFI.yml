@@ -141,9 +141,12 @@ jobs:
 
       - name: Start tmate SSH session (if enabled)
         if: github.event.inputs.ssh_enable == 'true'
-        uses: mxschmitt/action-tmate@v3
+        uses: mxschmitt/action-tmate@v3.17
         with:
           limit-access-to-actor: true
+          connect-timeout-seconds: 1200
+        env:
+          TMATE_VERBOSE: 1
 
       - name: Refresh config after SSH menuconfig
         run: |
